@@ -14,7 +14,7 @@ The application retrieves results from a dataset stored in Amazon S3 and display
 
 The architecture is fully serverless and deployed using AWS CDK for automation. Below is a high-level view of the components:
 
-![Architecture Diagram](C:/Users/valen/Downloads/serveless_project.jpeg)
+![Architecture Diagram](./assets/serverless_project.jpg)
 
 1. **Static Website** hosted in an Amazon S3 bucket.
 2. **Web UI** communicates with an **API Gateway** via HTTP requests.
@@ -54,7 +54,8 @@ To deploy this project:
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/your-username/series-recommender-serverless-aws.git
-   cd series-recommender-serverless-aws ```
+   cd series-recommender-serverless-aws 
+   ```
 
 2. **Install Dependencies: Ensure you have AWS CDK and Node.js installed, then run**:
 	```bash
