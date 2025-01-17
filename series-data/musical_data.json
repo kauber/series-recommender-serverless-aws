@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Galavant",
+    "release_year": "2015",
+    "original_language": "en",
+    "country": [
+      "US"
+    ],
+    "popularity": 17.779,
+    "rating": 7.332,
+    "description": "Once upon a time, the dashing hero, Prince Galavant lost the love of his life, Madalena, to the evil King Richard. Now, our fallen hero is ready to take revenge and restore his \u201chappily ever after.\u201d But it won't be without a few twists and turns along the way in this fairytale musical.",
+    "genres": [
+      "Musical",
+      "Comedy"
+    ],
+    "number_of_seasons": 2,
+    "episodes_per_season": [
+      {
+        "season": 1,
+        "episode_count": 8
+      },
+      {
+        "season": 2,
+        "episode_count": 10
+      }
+    ],
+    "poster_path": "/3q9a5WFsf08v8RQYVfI2DzNd7B4.jpg"
+  }
+]

@@ -8,3 +8,23 @@ __pycache__
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+
+# Node.js dependencies
+node_modules/
+*.log
+
+# CDK output and temporary files
+cdk.out/
+*.tsbuildinfo
+
+# Environment-specific files
+.env
+
+# IDE/Editor files
+.idea/
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+

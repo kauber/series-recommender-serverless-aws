@@ -1,0 +1,712 @@
+Resources:
+  SeriesRecommenderData998F7A20:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Fn::Join:
+          - ""
+          - - series-recommender-data-
+            - Ref: AWS::AccountId
+            - "-"
+            - Ref: AWS::Region
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: aws-cdk:auto-delete-objects
+          Value: "true"
+        - Key: aws-cdk:cr-owned:64e7acde
+          Value: "true"
+      VersioningConfiguration:
+        Status: Enabled
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/SeriesRecommenderData/Resource
+  SeriesRecommenderDataPolicy4ADB69F4:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: SeriesRecommenderData998F7A20
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:DeleteObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:PutBucketPolicy
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::GetAtt:
+                  - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+                  - Arn
+            Resource:
+              - Fn::GetAtt:
+                  - SeriesRecommenderData998F7A20
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - SeriesRecommenderData998F7A20
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/SeriesRecommenderData/Policy/Resource
+  SeriesRecommenderDataAutoDeleteObjectsCustomResourceBFAC5776:
+    Type: Custom::S3AutoDeleteObjects
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F
+          - Arn
+      BucketName:
+        Ref: SeriesRecommenderData998F7A20
+    DependsOn:
+      - SeriesRecommenderDataPolicy4ADB69F4
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/SeriesRecommenderData/AutoDeleteObjectsCustomResource/Default
+  CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+      ManagedPolicyArns:
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role
+  CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip
+      Timeout: 900
+      MemorySize: 128
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+          - Arn
+      Runtime:
+        Fn::FindInMap:
+          - LatestNodeRuntimeMap
+          - Ref: AWS::Region
+          - value
+      Description:
+        Fn::Join:
+          - ""
+          - - "Lambda function for auto-deleting objects in "
+            - Ref: SeriesRecommenderData998F7A20
+            - " S3 bucket."
+    DependsOn:
+      - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler
+      aws:asset:path: asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6
+      aws:asset:property: Code
+  TVSeriesWebUIBucketDF87A3A4:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Fn::Join:
+          - ""
+          - - tv-series-web-ui-
+            - Ref: AWS::AccountId
+            - "-"
+            - Ref: AWS::Region
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      Tags:
+        - Key: aws-cdk:auto-delete-objects
+          Value: "true"
+        - Key: aws-cdk:cr-owned:6db32c6f
+          Value: "true"
+      WebsiteConfiguration:
+        IndexDocument: index.html
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/TVSeriesWebUIBucket/Resource
+  TVSeriesWebUIBucketPolicyDAB4467B:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: TVSeriesWebUIBucketDF87A3A4
+      PolicyDocument:
+        Statement:
+          - Action: s3:GetObject
+            Effect: Allow
+            Principal:
+              AWS: "*"
+            Resource:
+              Fn::Join:
+                - ""
+                - - Fn::GetAtt:
+                      - TVSeriesWebUIBucketDF87A3A4
+                      - Arn
+                  - /*
+          - Action:
+              - s3:DeleteObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:PutBucketPolicy
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::GetAtt:
+                  - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+                  - Arn
+            Resource:
+              - Fn::GetAtt:
+                  - TVSeriesWebUIBucketDF87A3A4
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - TVSeriesWebUIBucketDF87A3A4
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/TVSeriesWebUIBucket/Policy/Resource
+  TVSeriesWebUIBucketAutoDeleteObjectsCustomResource2E1BF9C1:
+    Type: Custom::S3AutoDeleteObjects
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F
+          - Arn
+      BucketName:
+        Ref: TVSeriesWebUIBucketDF87A3A4
+    DependsOn:
+      - TVSeriesWebUIBucketPolicyDAB4467B
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/TVSeriesWebUIBucket/AutoDeleteObjectsCustomResource/Default
+  DeploySeriesDataAwsCliLayer1FA91A46:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      Content:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: db6ce1f8a23637fd56cc33aaa00e7b136dcbc4761605fa625b8f88bb5eb435d1.zip
+      Description: /opt/awscli/aws
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/DeploySeriesData/AwsCliLayer/Resource
+      aws:asset:path: asset.db6ce1f8a23637fd56cc33aaa00e7b136dcbc4761605fa625b8f88bb5eb435d1.zip
+      aws:asset:is-bundled: false
+      aws:asset:property: Content
+  DeploySeriesDataCustomResource3264EDE0:
+    Type: Custom::CDKBucketDeployment
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536
+          - Arn
+      SourceBucketNames:
+        - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+      SourceObjectKeys:
+        - a3939f31b9d52bcb89bdaf85d81c100cf0515771f133f739b83f8594adaf6806.zip
+      DestinationBucketName:
+        Ref: SeriesRecommenderData998F7A20
+      Prune: true
+      OutputObjectKeys: true
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/DeploySeriesData/CustomResource/Default
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetBucket*
+              - s3:GetObject*
+              - s3:List*
+            Effect: Allow
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+                    - /*
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+          - Action:
+              - s3:Abort*
+              - s3:DeleteObject*
+              - s3:GetBucket*
+              - s3:GetObject*
+              - s3:List*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - SeriesRecommenderData998F7A20
+                  - Arn
+              - Fn::GetAtt:
+                  - TVSeriesWebUIBucketDF87A3A4
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - SeriesRecommenderData998F7A20
+                        - Arn
+                    - /*
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - TVSeriesWebUIBucketDF87A3A4
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+      PolicyName: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF
+      Roles:
+        - Ref: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: c6358465bf49dfae556bb430bf9c81fa578c221b82c308e3707901b1dd654762.zip
+      Environment:
+        Variables:
+          AWS_CA_BUNDLE: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      Handler: index.handler
+      Layers:
+        - Ref: DeploySeriesDataAwsCliLayer1FA91A46
+      Role:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265
+          - Arn
+      Runtime: python3.11
+      Timeout: 900
+    DependsOn:
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource
+      aws:asset:path: asset.c6358465bf49dfae556bb430bf9c81fa578c221b82c308e3707901b1dd654762
+      aws:asset:is-bundled: false
+      aws:asset:property: Code
+  DeployWebUIAwsCliLayer3A383B83:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      Content:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: db6ce1f8a23637fd56cc33aaa00e7b136dcbc4761605fa625b8f88bb5eb435d1.zip
+      Description: /opt/awscli/aws
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/DeployWebUI/AwsCliLayer/Resource
+      aws:asset:path: asset.db6ce1f8a23637fd56cc33aaa00e7b136dcbc4761605fa625b8f88bb5eb435d1.zip
+      aws:asset:is-bundled: false
+      aws:asset:property: Content
+  DeployWebUICustomResource78A10155:
+    Type: Custom::CDKBucketDeployment
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536
+          - Arn
+      SourceBucketNames:
+        - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+      SourceObjectKeys:
+        - 39f6cfd47234ce9f1bd6f5f18e47b4ad770c7bccc7565e012e477de884bc6af2.zip
+      DestinationBucketName:
+        Ref: TVSeriesWebUIBucketDF87A3A4
+      Prune: true
+      OutputObjectKeys: true
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/DeployWebUI/CustomResource/Default
+  FetchSeriesRecommendationLambdaServiceRoleCB5D219F:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/FetchSeriesRecommendationLambda/ServiceRole/Resource
+  FetchSeriesRecommendationLambdaServiceRoleDefaultPolicyCF9AE3C4:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetBucket*
+              - s3:GetObject*
+              - s3:List*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - SeriesRecommenderData998F7A20
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - SeriesRecommenderData998F7A20
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+      PolicyName: FetchSeriesRecommendationLambdaServiceRoleDefaultPolicyCF9AE3C4
+      Roles:
+        - Ref: FetchSeriesRecommendationLambdaServiceRoleCB5D219F
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/FetchSeriesRecommendationLambda/ServiceRole/DefaultPolicy/Resource
+  FetchSeriesRecommendationLambda99EC493B:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 47ee3716db259f4f675ed81b4b809eb6f851ec08ae34b5ddcfe8977a5349aaa9.zip
+      Environment:
+        Variables:
+          BUCKET_NAME:
+            Ref: SeriesRecommenderData998F7A20
+      Handler: lambda_function.lambda_handler
+      Role:
+        Fn::GetAtt:
+          - FetchSeriesRecommendationLambdaServiceRoleCB5D219F
+          - Arn
+      Runtime: python3.9
+    DependsOn:
+      - FetchSeriesRecommendationLambdaServiceRoleDefaultPolicyCF9AE3C4
+      - FetchSeriesRecommendationLambdaServiceRoleCB5D219F
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/FetchSeriesRecommendationLambda/Resource
+      aws:asset:path: asset.47ee3716db259f4f675ed81b4b809eb6f851ec08ae34b5ddcfe8977a5349aaa9
+      aws:asset:is-bundled: false
+      aws:asset:property: Code
+  APILogGroup566E111F:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: series-recommender-api-log
+      RetentionInDays: 7
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/APILogGroup/Resource
+  TvSeriesRecommenderAPIC48AAB69:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Description: API for searching TV series recommendations.
+      Name: TvSeriesRecommenderAPI
+      ProtocolType: HTTP
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/TvSeriesRecommenderAPI/Resource
+  TvSeriesRecommenderAPIDefaultStage280AF483:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId:
+        Ref: TvSeriesRecommenderAPIC48AAB69
+      AutoDeploy: true
+      StageName: $default
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/TvSeriesRecommenderAPI/DefaultStage/Resource
+  TvSeriesRecommenderAPIGETsearchSearchIntegration4AE6E327:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId:
+        Ref: TvSeriesRecommenderAPIC48AAB69
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::GetAtt:
+          - FetchSeriesRecommendationLambda99EC493B
+          - Arn
+      PayloadFormatVersion: "2.0"
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/TvSeriesRecommenderAPI/GET--search/SearchIntegration/Resource
+  TvSeriesRecommenderAPIGETsearchSearchIntegrationPermission66C24945:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - FetchSeriesRecommendationLambda99EC493B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: TvSeriesRecommenderAPIC48AAB69
+            - /*/*/search
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/TvSeriesRecommenderAPI/GET--search/SearchIntegration-Permission
+  TvSeriesRecommenderAPIGETsearch8D332FEB:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: TvSeriesRecommenderAPIC48AAB69
+      AuthorizationType: NONE
+      RouteKey: GET /search
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: TvSeriesRecommenderAPIGETsearchSearchIntegration4AE6E327
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/TvSeriesRecommenderAPI/GET--search/Resource
+  APILoggingStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      AccessLogSettings:
+        DestinationArn:
+          Fn::GetAtt:
+            - APILogGroup566E111F
+            - Arn
+        Format: '{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp", "requestTime":"$context.requestTime", "httpMethod":"$context.httpMethod", "routeKey":"$context.routeKey", "status":"$context.status", "protocol":"$context.protocol", "responseLength":"$context.responseLength" }'
+      ApiId:
+        Ref: TvSeriesRecommenderAPIC48AAB69
+      StageName: dev
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/APILoggingStage
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/11Qy2rDMBD8ltwVNU4oPScuaQspGAd6NRtbcbeRJaNdxxjhfy+y8iKneexotcxSJm+vMplBT/OyOs01HqTfM5QnAT0VnlbSb7rypFikR3NhETKrsRzu9kVHsQFSo6BV4SvVajs0yrCMo/ebIYBIMcl1gFFoaA4VSJ8ezQ4G5X6UI7RG7NHUWrE1286UHJwbSY/mkWfKNUjh0SgQGulzq1UYTHg/OLJRaFuT9DtbfzjbtWFy5aOAFmtg1cNwXkr/ydyuWwyRAEHuGeppeSTBym3HkX0ZVrWD62FPcsqNo0g7YtvkimznynjoA/+GtkVTP6UyZ89YKRcaFlNz4f+Qi/0VOnRXQE+lRrnuKdU41Sked6fWVMhTUdnAv9a8rGSykMli9keIc9cZxkbJPOI/c+pADSYCAAA=
+    Metadata:
+      aws:cdk:path: TvSeriesRecommenderStack/CDKMetadata/Default
+    Condition: CDKMetadataAvailable
+Mappings:
+  LatestNodeRuntimeMap:
+    af-south-1:
+      value: nodejs20.x
+    ap-east-1:
+      value: nodejs20.x
+    ap-northeast-1:
+      value: nodejs20.x
+    ap-northeast-2:
+      value: nodejs20.x
+    ap-northeast-3:
+      value: nodejs20.x
+    ap-south-1:
+      value: nodejs20.x
+    ap-south-2:
+      value: nodejs20.x
+    ap-southeast-1:
+      value: nodejs20.x
+    ap-southeast-2:
+      value: nodejs20.x
+    ap-southeast-3:
+      value: nodejs20.x
+    ap-southeast-4:
+      value: nodejs20.x
+    ap-southeast-5:
+      value: nodejs20.x
+    ap-southeast-7:
+      value: nodejs20.x
+    ca-central-1:
+      value: nodejs20.x
+    ca-west-1:
+      value: nodejs20.x
+    cn-north-1:
+      value: nodejs18.x
+    cn-northwest-1:
+      value: nodejs18.x
+    eu-central-1:
+      value: nodejs20.x
+    eu-central-2:
+      value: nodejs20.x
+    eu-north-1:
+      value: nodejs20.x
+    eu-south-1:
+      value: nodejs20.x
+    eu-south-2:
+      value: nodejs20.x
+    eu-west-1:
+      value: nodejs20.x
+    eu-west-2:
+      value: nodejs20.x
+    eu-west-3:
+      value: nodejs20.x
+    il-central-1:
+      value: nodejs20.x
+    me-central-1:
+      value: nodejs20.x
+    me-south-1:
+      value: nodejs20.x
+    mx-central-1:
+      value: nodejs20.x
+    sa-east-1:
+      value: nodejs20.x
+    us-east-1:
+      value: nodejs20.x
+    us-east-2:
+      value: nodejs20.x
+    us-west-1:
+      value: nodejs20.x
+    us-west-2:
+      value: nodejs20.x
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - af-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-3
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-4
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-2
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - il-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+      - Fn::Equals:
+          - Ref: AWS::Region
+          - us-west-2
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+

@@ -1,0 +1,6 @@
+{
+  "hosted-zone:account=767397959554:domainName=myapp.com:region=eu-central-1": {
+    "Id": "/hostedzone/Z092991732LS95D909WHC",
+    "Name": "myapp.com."
+  }
+}
