@@ -14,7 +14,7 @@ The application retrieves results from a dataset stored in Amazon S3 and display
 
 The architecture is fully serverless and deployed using AWS CDK for automation. Below is a high-level view of the components:
 
-![Architecture Diagram](./path/to/your/architecture-diagram.jpg)
+![Architecture Diagram](C:/Users/valen/Downloads/serveless_project.jpeg)
 
 1. **Static Website** hosted in an Amazon S3 bucket.
 2. **Web UI** communicates with an **API Gateway** via HTTP requests.
@@ -59,7 +59,8 @@ To deploy this project:
 2. **Install Dependencies: Ensure you have AWS CDK and Node.js installed, then run**:
 	```bash
 	npm install -g aws-cdk
-	npm install```
+	npm install 
+	```
 	
 3. **Bootstrap Your AWS Environment: If this is your first time using AWS CDK in the account/region:**
 	```bash
