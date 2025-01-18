@@ -31,7 +31,7 @@ def lambda_handler(event, context):
 
         # Construct the file name based on the genre
         file_key = f"{genre}_data.json"
-        bucket_name = 'tv-series-recommender-data-767397959554-eu-central-1'
+        bucket_name = 'your-bucket-name'
 
         # Fetch the genre-specific file from S3
         logger.info(f"Fetching file: {file_key}")

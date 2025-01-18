@@ -24,8 +24,8 @@ TvSeriesRecommenderStack(app, "TvSeriesRecommenderStack",
 
     # For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html
     env={
-        "account": "767397959554",  # Replace with your AWS Account ID
-        "region": "eu-central-1"   # Replace with your desired AWS Region
+        "account": "your-account-number",  # Replace with your AWS Account ID
+        "region": "your-region"   # Replace with your desired AWS Region
     }
     )
 
